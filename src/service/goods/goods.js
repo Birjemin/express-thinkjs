@@ -2,7 +2,7 @@ class GoodsService extends think.Service {
   async create(params) {
     let goods = await this.model('goods/goods').findByName(params.name);
     // 有属性，不为空
-    if (this.isEmpty(goods)) {
+    if (think.app.context.isEmpty(goods)) {
       think.logger.info('[create]search info if exsit: ', [JSON.stringify(goods)]);
       return false;
     }

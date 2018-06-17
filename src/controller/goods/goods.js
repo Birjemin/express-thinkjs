@@ -1,4 +1,5 @@
 import Base from './../base.js';
+
 class GoodsController extends Base {
   /**
    * @api {get} /api/goods 获取全部详情
@@ -34,15 +35,12 @@ class GoodsController extends Base {
   async getPerListAction() {
     // 官网没有提供一个logic过滤后字段的方法
     let nowPage = this.get('page');
-    let name = this.get('name');
-    let price = this.get('price');
-    let params = {};
-    if (typeof (name) !== 'undefined') {
-      params = Object.assign(params, {name: name});
-    }
-    if (typeof (price) !== 'undefined') {
-      params = Object.assign(params, {price: price});
-    }
+    let params = this.ctx.filterUndefined(
+      new Map([
+        ['name', this.get('name')],
+        ['price', this.get('price')]
+      ])
+    );
     let list = await this.model('goods/goods').getPerList(params, nowPage);
     return this.success(list);
   }
@@ -93,23 +91,14 @@ class GoodsController extends Base {
    */
   async updateByIdAction() {
     let id = this.get('id');
-    let name = this.post('name');
-    let desc = this.post('desc');
-    let price = this.post('price');
-    let sum = this.post('sum');
-    let params = {};
-    if (typeof (name) !== 'undefined') {
-      params = Object.assign(params, {name: name});
-    }
-    if (typeof (desc) !== 'undefined') {
-      params = Object.assign(params, {desc: desc});
-    }
-    if (typeof (price) !== 'undefined') {
-      params = Object.assign(params, {price: price});
-    }
-    if (typeof (sum) !== 'undefined') {
-      params = Object.assign(params, {sum: sum});
-    }
+    let params = this.ctx.filterUndefined(
+      new Map([
+        ['name', this.post('name')],
+        ['desc', this.post('desc')],
+        ['price', this.post('price')],
+        ['sum', this.post('sum')]
+      ])
+    );
     let result = await this.model('goods/goods').updateById(id, params);
     return this.success({result: Boolean(result)});
   }
@@ -134,17 +123,15 @@ class GoodsController extends Base {
    * }
    */
   async createAction() {
-    let name = this.post('name');
-    let desc = this.post('desc');
-    let price = this.post('price');
-    let sum = this.post('sum');
-    let params = {
-      name: name,
-      desc: desc,
-      price: price,
-      sum: sum,
-      created_at: this.genrateNowTime()
-    };
+    let params = this.ctx.filterUndefined(
+      new Map([
+        ['name', this.post('name')],
+        ['desc', this.post('desc')],
+        ['price', this.post('price')],
+        ['sum', this.post('sum')],
+        ['created_at', this.ctx.genrateNowTime()]
+      ])
+    );
     let result = await think.service('goods/goods').create(params);
     return (result === false) ? this.success({result: false}) : this.success({result: true});
   }
@@ -169,4 +156,5 @@ class GoodsController extends Base {
     return this.success({result: Boolean(result)});
   }
 }
+
 export default GoodsController;
