@@ -1,0 +1,6 @@
+{
+  "extends": "think",
+  "rules": {
+    "prefer-const": 0
+  }
+}
