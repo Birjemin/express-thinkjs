@@ -37,4 +37,4 @@ config.development.js
 adapter.development.js
 
 www/apidoc
-.vscode
+.vscode/
